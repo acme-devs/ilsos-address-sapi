@@ -10,7 +10,9 @@ Address System API
     1. [GET /v1/address/verification](#get-v1addressverification)
 
 ## Description
-Description...
+The API provides the backend services for the Drivers Address business case. The next diagram shows the architecture
+
+![architecture](./media/architecture.png)
 
 This service implements the next API specification: https://anypoint.mulesoft.com/exchange/0fa744b1-1284-46c5-b23c-0eb98ea787e3/ilsos-address-sapi/minor/1.0/
 
