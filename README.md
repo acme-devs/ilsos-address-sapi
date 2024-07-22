@@ -7,7 +7,7 @@ Address System API
 ## Table of contents
 1. [Description](#description)
 1. [Endpoints](#endpoints)
-    1. [GET /v1/address/verification](#get-v1addressverification)
+    1. [GET /v1/address/addresses](#get-v1addresses)
 
 ## Description
 The API provides the backend services for the Drivers Address business case. The next diagram shows the architecture
@@ -19,7 +19,7 @@ This service implements the next API specification: https://anypoint.mulesoft.co
 ## Endpoints
 The service provides the following endpoints:
 
-### GET /v1/address/verification
+### GET /v1/address/addresses
 Verify the address with the USPS database.
 
 The next diagram shows the business sequence of messages or events exchanged between the several backend systems.
@@ -31,7 +31,7 @@ sequenceDiagram
     participant api as ilsos-address-sapi
     participant usps as USPS
 
-    ui->>api:GET/address/address-verification <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
+    ui->>api:GET/address/addresses <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
     api-->>api:Dataweave - format records for USPS.
     api-->>usps:Address validation.
     usps-->>api:Retrieve response.
