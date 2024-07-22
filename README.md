@@ -28,16 +28,16 @@ The next diagram shows the business sequence of messages or events exchanged bet
 sequenceDiagram
     autonumber
     participant ui as UI
-    participant api as ilsos-drivers-sapi
-    participant qas as QAS
+    participant api as ilsos-address-sapi
+    participant usps as USPS
 
-    ui->>api:GET/drivers/address-verification <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
-    api-->>api:Dataweave - format records for QAS.
-    api-->>qas:Address validation.
-    qas-->>api:Retrieve response.
-    api-->>api:Log response. If QAS access error, then send email to admin
+    ui->>api:GET/address/address-verification <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
+    api-->>api:Dataweave - format records for USPS.
+    api-->>usps:Address validation.
+    usps-->>api:Retrieve response.
+    api-->>api:Log response. If USPS access error, then send email to admin
     alt Success Scenario 
-        api-->ui: Status 200 ,response from QAS
+        api-->ui: Status 200 ,response from USPS
     end
     alt Error Scenario 
         api-->ui: Status 400 , detail error message
