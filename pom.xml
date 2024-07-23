@@ -13,7 +13,7 @@
 	<version>1.0.1</version>
 	<packaging>mule-application</packaging>
 
-	<name>ilsos-drivers-sapi</name>
+	<name>ilsos-address-sapi</name>
 	<description>Mulesoft Address System API</description>
 
 	<properties>
@@ -21,9 +21,23 @@
 		<fields key="sourceCode">https://github.com/jpontdia/ilsos-core</fields>
 		<categories key="Asset type">Configuration</categories>-->
 		<tags>Address, USPS, sapi</tags>
+
+		<!-- RAML specification -->
+		<restconnector.api.spec.group>${project.groupId}</restconnector.api.spec.group>
+		<restconnector.api.spec.artifact>ilsos-address-sapi</restconnector.api.spec.artifact>
+		<restconnector.api.spec.version>1.0.15</restconnector.api.spec.version>
 	</properties>
 
 	<dependencies>
+
+		<!-- RAML specification --> 
+		<dependency>
+			<groupId>${restconnector.api.spec.group}</groupId>
+			<artifactId>${restconnector.api.spec.artifact}</artifactId>
+			<version>${restconnector.api.spec.version}</version>
+			<classifier>raml</classifier>
+			<type>zip</type> 
+		</dependency>
 
 		<!-- Common configurations -->
 		<dependency>

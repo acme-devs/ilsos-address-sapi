@@ -149,9 +149,3 @@ target/
 # Mulesoft BAT    #
 # --------------- #
 **/output-reports
-
-# ------------------------ #
-# Development standards    #
-# ------------------------ #
-exchange-docs/home.md
-exchange-docs/media/*.*
