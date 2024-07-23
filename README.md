@@ -27,19 +27,19 @@ The next diagram shows the business sequence of messages or events exchanged bet
 ```mermaid
 sequenceDiagram
     autonumber
-    participant ui as UI
+    participant eapi as ilsos-addresschange-eapi
     participant api as ilsos-address-sapi
     participant usps as USPS
 
-    ui->>api:GET/address/addresses <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
+    eapi->>api:GET/address/addresses <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
     api-->>api:Dataweave - format records for USPS.
     api-->>usps:Address validation.
     usps-->>api:Retrieve response.
     api-->>api:Log response. If USPS access error, then send email to admin
     alt Success Scenario 
-        api-->ui: Status 200 ,response from USPS
+        api-->eapi: Status 200 ,response from USPS
     end
     alt Error Scenario 
-        api-->ui: Status 400 , detail error message
+        api-->eapi: Status 400 , detail error message
     end
   ```
