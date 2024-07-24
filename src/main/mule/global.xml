@@ -17,7 +17,7 @@
 	<import file="global-error.xml" />
 	<import file="global-configuration.xml" />
 
-	<configuration-properties file="properties.yaml" />
+	<configuration-properties file="properties-${env}.yaml" />
 
 	<apikit:config
 		name="api-config"
@@ -40,5 +40,6 @@
 			tlsContext="TLS_Context">
 		</http:listener-connection>
 	</http:listener-config>
+	<global-property doc:name="Global Property" doc:id="7898e61f-3b68-4211-8c94-2b35ae9e1206" name="env" value="dev" />
 
 </mule>

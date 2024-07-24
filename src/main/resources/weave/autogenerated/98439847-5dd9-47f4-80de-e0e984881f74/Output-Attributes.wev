@@ -1,0 +1,33 @@
+%dw 2.0
+
+type auto_98439847_5dd9_47f4_80de_e0e984881f74_Output_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|
+    client_id: String, 
+    client_secret: String
+  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|
+    street: String, 
+    secondary?: String, 
+    city?: String, 
+    state: "DE" | "HI" | "PR" | "TX" | "PW" | "MA" | "MD" | "IA" | "ME" | "ID" | "MH" | "MI" | "UT" | "AA" | "MN" | "MO" | "IL" | "MP" | "AE" | "IN" | "MS" | "MT" | "AK" | "AL" | "VA" | "AP" | "AR" | "AS" | "VI" | "NC" | "ND" | "NE" | "RI" | "AZ" | "NH" | "NJ" | "VT" | "NM" | "FL" | "FM" | "NV" | "WA" | "NY" | "SC" | "SD" | "WI" | "OH" | "GA" | "OK" | "CA" | "WV" | "WY" | "OR" | "KS" | "CO" | "GU" | "KY" | "CT" | "PA" | "LA" | "TN" | "DC", 
+    zipcode?: String, 
+    zipplus4?: String
+  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {|  |}, 
+  version: String, 
+  localAddress: String
+|}
+

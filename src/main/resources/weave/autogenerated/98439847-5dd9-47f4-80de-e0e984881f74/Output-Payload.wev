@@ -1,0 +1,12 @@
+%dw 2.0
+
+type auto_98439847_5dd9_47f4_80de_e0e984881f74_Output_Payload = {|
+  secondary?: String, 
+  zipcode?: String, 
+  zipplus4?: String, 
+  city?: String, 
+  street?: String, 
+  state?: String
+|} {"description": "Address information",
+"label": "Address"}
+

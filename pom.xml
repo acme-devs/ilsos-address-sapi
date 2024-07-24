@@ -30,13 +30,13 @@
 
 	<dependencies>
 
-		<!-- RAML specification --> 
+		<!-- RAML specification -->
 		<dependency>
 			<groupId>${restconnector.api.spec.group}</groupId>
 			<artifactId>${restconnector.api.spec.artifact}</artifactId>
 			<version>${restconnector.api.spec.version}</version>
 			<classifier>raml</classifier>
-			<type>zip</type> 
+			<type>zip</type>
 		</dependency>
 
 		<!-- Common configurations -->
@@ -44,6 +44,12 @@
 			<groupId>0fa744b1-1284-46c5-b23c-0eb98ea787e3</groupId>
 			<artifactId>ilsos-commons</artifactId>
 			<version>1.0.5</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-objectstore-connector</artifactId>
+			<version>1.2.2</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
