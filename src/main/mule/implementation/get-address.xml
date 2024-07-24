@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<!-- Scheduler flow to get token every 30 minutes -->
+	<flow name="usps-authentication" doc:id="8ae7853e-09a1-455b-b933-46fc1a684df2" >
+		<scheduler doc:name="Scheduler" doc:id="8e970eec-5e31-4965-932d-011305d6b772" >
+			<scheduling-strategy>
+                <cron expression="${api.tokenCron}"/>
+            </scheduling-strategy>
+		</scheduler>
+		
+		<ee:transform doc:name="USPS HTTP Headers" doc:id="998f32a4-20e6-4d49-a2b9-7d0aff2644fc" >
+			<ee:message >
+				<ee:set-payload resource="dwl/requestPayload.dwl"></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		
+		<http:request method="POST" doc:name="USPS HTTP Token Request" path="${api.tokenUrl}" config-ref="HTTP_Request_configuration">
+            <http:headers><![CDATA[#[{
+	"Content-Type": "application/json"
+}]]]></http:headers>
+        </http:request>
+        
+        <set-payload value="#[payload.access_token]" doc:name="USPS Token Extract "/>
+        
+	    <!--<logger doc:name="payload" level="INFO" message="#[payload]"/>-->
+		<os:store doc:name="USPS Token Store " key="usps_token" objectStore="Object_store"/>
+	</flow>
+	
+    
+	<flow name="usps-getaddress" >
+		<ee:transform doc:name="USPS Query Params for Address Service">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+                    output application/java
+                    ---
+                    payload
+                ]]></ee:set-payload>
+            </ee:message>
+            <ee:variables>
+                <ee:set-variable variableName="city"><![CDATA[%dw 2.0
+                    output application/java
+                    ---
+                    attributes.queryParams.city
+                ]]></ee:set-variable>
+                <ee:set-variable variableName="state"><![CDATA[%dw 2.0
+                    output application/java
+                    ---
+                    attributes.queryParams.state
+                ]]></ee:set-variable>
+                <ee:set-variable variableName="streetAddress"><![CDATA[%dw 2.0
+                    output application/java
+                    ---
+                    attributes.queryParams.street               ]]></ee:set-variable>
+                <ee:set-variable variableName="ZipCode"><![CDATA[%dw 2.0
+                    output application/java
+                    ---
+                    attributes.queryParams.zipCode
+                ]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<os:retrieve doc:name="USPS Token Retrieve from Object Store" key="usps_token" objectStore="Object_store">
+			<os:default-value ><![CDATA[""]]></os:default-value>
+		</os:retrieve>
+		<http:request method="GET" doc:name="USPS Address Request" config-ref="HTTP_Request_configuration" path="${api.addressUrl}">
+			<http:headers ><![CDATA[#[
+			 	output application/java
+				---
+				{
+					Authorization : "Bearer" ++ " " ++ payload
+				}]]]>
+			</http:headers>
+			<http:query-params ><![CDATA[#[
+				output application/java
+				---
+				{
+					"state": vars.state,
+				    "ZIPCode": vars.ZipCode,
+				    "city": vars.city,
+				    "streetAddress": vars.streetAddress
+				}]]]>
+			</http:query-params>
+		</http:request>
+		
+		<ee:transform doc:name="USPS Get Address Response">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+					output application/json
+					---
+					{
+					  "street":  payload.address.streetAddress,
+					  "secondary":  payload.address.secondary,
+					  "city":  payload.address.city,
+					  "state": payload.address.state,
+					  "zipcode": payload.address.ZIPCode,
+					  "zipplus4": payload.address.ZIPPlus4
+					}
+					]]>
+                </ee:set-payload>
+            </ee:message>
+        </ee:transform>
+	</flow>
+	
+	</mule>
+
+	

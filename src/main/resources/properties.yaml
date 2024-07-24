@@ -16,3 +16,4 @@ api:
   uspsPort: "443"
   tokenUrl: "/oauth2/v3/token"
   addressUrl: "/addresses/v3/address"
+  tokenCron: "0 */30 * * * ?"

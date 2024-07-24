@@ -7,17 +7,19 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
 	xsi:schemaLocation="
 		http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd 
 		http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  
 		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
 
 	
 	<import file="global-error.xml" />
 	<import file="global-configuration.xml" />
 
-	<configuration-properties file="properties-${env}.yaml" />
+	<configuration-properties file="properties.yaml" />
 
 	<apikit:config
 		name="api-config"
@@ -40,6 +42,16 @@
 			tlsContext="TLS_Context">
 		</http:listener-connection>
 	</http:listener-config>
-	<global-property doc:name="Global Property" doc:id="7898e61f-3b68-4211-8c94-2b35ae9e1206" name="env" value="dev" />
-
+    
+    <http:request-config name="HTTP_Request_configuration" 
+     		doc:name="HTTP Request configuration" >
+		<http:request-connection 
+			host="${api.uspsDomain}" 
+			port="${api.uspsPort}" 
+			protocol="${httpprotocol}"/>
+	</http:request-config>
+	
+	<os:object-store name="Object_store" doc:name="Object store"/>
+	
+	
 </mule>
