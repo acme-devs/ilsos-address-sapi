@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+		<flow name="call-api">
+
+		<!-- <logger doc:name="call GET" level="INFO" category="app" message='#[output application/java -&#45;&#45; "GET: " ++ attributes.queryParams.city++attributes.queryParams.state
+		++attributes.queryParams.street++attributes.queryParams.zipCode]' /> -->
+
+		<set-variable doc:name="set apiInputPayload" variableName="apiInputPayload" value='#[payload]'  />
+
+		<!-- <http:request config-ref="HTTP_Request_configuration" 
+			method="GET" path="${api.addressUrl}" responseTimeout="#[1800000]">
+			<http:headers><![CDATA[#[output application/java
+				-&#45;&#45;
+				{
+					Authorization : "Bearer" ++ " " ++ payload
+				}]]]>
+			</http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+				-&#45;&#45;
+				{
+					"state": vars.state,
+				    "ZIPCode": vars.ZipCode,
+				    "city": vars.city,
+				    "streetAddress": vars.streetAddress
+				}]]]></http:query-params>
+			<http:response-validator>
+				<http:success-status-code-validator values="#[vars.statusValidator]" />
+			</http:response-validator>
+		</http:request> -->
+
+		<http:request method="GET" doc:name="USPS Address Request" config-ref="HTTP_Request_configuration" path="${api.addressUrl}">
+			<http:headers><![CDATA[#[output application/java
+				---
+				{
+					Authorization : "Bearer" ++ " " ++ payload
+				}]]]>
+			</http:headers>
+			<http:query-params><![CDATA[#[output application/java
+				---
+				{
+					"state": vars.state,
+				    "ZIPCode": vars.ZipCode,
+				    "city": vars.city,
+				    "streetAddress": vars.streetAddress
+				}]]]>
+			</http:query-params>
+		</http:request>
+		
+		
+
+		
+		
+		<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[200]'  />
+		<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[payload]'/>
+
+		<error-handler>
+			<on-error-continue enableNotifications="false" logException="false">
+				<logger level="INFO" category="app" message="There was an error while calling the service through the GET method" />
+				<logger level="INFO" category="app" message="#[error.errorMessage.payload]" />
+				<logger level="INFO" category="app" message="#[error.errorMessage]" />
+				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'  />
+				<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[error.errorMessage.payload]'/>
+				<logger level="INFO" category="app" message="#[vars.httpMessage]" />
+			</on-error-continue>
+		</error-handler>
+	</flow> 
+	
+</mule>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<!-- Scheduler flow to get token every 30 minutes -->
+	<flow name="usps-authentication"  >
+		<scheduler doc:name="Scheduler" >
+			<scheduling-strategy>
+                <cron expression="${api.tokenCron}"/>
+            </scheduling-strategy>
+		</scheduler>
+		
+		<ee:transform doc:name="USPS HTTP Headers"  >
+			<ee:message >
+				<ee:set-payload resource="dwl/requestPayload.dwl"></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		
+		<http:request method="POST" doc:name="USPS HTTP Token Request" path="${api.tokenUrl}" config-ref="HTTP_Request_configuration">
+            <http:body ><![CDATA[#[output application/json
+						---
+						payload]]]></http:body>
+			<http:headers><![CDATA[#[{
+							"Content-Type": "application/json"
+	}]]]></http:headers>
+        </http:request>
+        
+        <set-payload value="#[payload.access_token]" doc:name="USPS Token Extract "/>
+        
+	    <!--<logger doc:name="payload" level="INFO" message="#[payload]"/>-->
+		<os:store doc:name="USPS Token Store " key="usps_token" objectStore="Object_store"/>
+	</flow>
+	</mule>	

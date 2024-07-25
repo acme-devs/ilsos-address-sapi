@@ -2,8 +2,8 @@
 output application/java
 ---
 {
-	"grant_type": p('grant_type'),
-	"client_id": p('client_id'),
-	"client_secret": p('client_secret'),
-	"code": p('code')
+	"grant_type": p('api.grant_type'),
+	"client_id": p('api.client_id'),
+	"client_secret": p('api.client_secret'),
+	"code": p('api.code')
 }
