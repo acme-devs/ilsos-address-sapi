@@ -47,25 +47,23 @@
 		</os:retrieve>
 		
 		<flow-ref doc:name="Flow Reference" doc:id="2fa700cd-e881-46d7-8254-1c921217a982" name="call-api"/>
-		<logger level="INFO" doc:name="Logger" doc:id="c571d1d3-9eb2-4b31-96de-2757ee971adf" message="#[payload]"/>
 		<ee:transform doc:name="USPS Get Address Response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
-					output application/json
-					---
-					if ( vars.httpStatus != 200 ) {
-						code: vars.httpStatus,
-						// message: vars.httpMessage
-						message: vars.httpMessage
-					}else
+output application/json
+---
+if ( vars.httpStatus != 200 ) {
+	code: vars.httpStatus,
+	message: vars.httpMessage.error.errors[0].detail
+}else
 										{
-						"street": payload.address.streetAddress,
-						"secondary": payload.address.secondary,
-						"city": payload.address.city,
-						"state": payload.address.state,
-						"zipcode": payload.address.ZIPCode,
-						"zipplus4": payload.address.ZIPPlus4
-					}
+	"street": payload.address.streetAddress,
+	"secondary": payload.address.secondary,
+	"city": payload.address.city,
+	"state": payload.address.state,
+	"zipcode": payload.address.ZIPCode,
+	"zipplus4": payload.address.ZIPPlus4
+}
 							]]>
                 </ee:set-payload>
             </ee:message>

@@ -71,8 +71,8 @@
 				<logger level="INFO" category="app" message="#[error.errorMessage]" />
 				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'  />
 				<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[error.errorMessage.payload]'/>
-				<logger level="INFO" category="app" message="#[vars.httpMessage]" />
-			</on-error-continue>
+			
+</on-error-continue>
 		</error-handler>
 	</flow> 
 	
