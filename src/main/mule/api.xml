@@ -15,7 +15,7 @@
 
     
 	<flow name="api-main">
-        <http:listener config-ref="api-httpListenerConfig" path="/api/address/*">
+        <http:listener config-ref="api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
