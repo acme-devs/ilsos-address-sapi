@@ -31,8 +31,8 @@ sequenceDiagram
     participant api as ilsos-address-sapi
     participant usps as USPS
 
-    eapi->>api:GET/address/addresses <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
-    api-->>api:Dataweave - format records for USPS.
+    eapi->>api:GET/address/addresses <br>Input: Street,City,State and ZipCode
+    api-->>api:Scheduler - put the token in object store every 30 minutes.<br>Dataweave - format records for USPS.
     api-->>usps:Address validation.
     usps-->>api:Retrieve response.
     api-->>api:Log response. If USPS access error, then send email to admin
@@ -40,6 +40,6 @@ sequenceDiagram
         api-->eapi: Status 200 ,response from USPS
     end
     alt Error Scenario 
-        api-->eapi: Status 400 , detail error message
+        api-->eapi: Status 400 or 500, detail error message
     end
   ```
