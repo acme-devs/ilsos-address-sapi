@@ -25,14 +25,13 @@ Verify the address with the USPS database.
 The next diagram shows the business sequence of messages or events exchanged between the several backend systems.
 
 ```mermaid
-
 sequenceDiagram
     autonumber
     participant eapi as ilsos-addresschange-eapi
     participant api as ilsos-address-sapi
     participant usps as USPS
 
-    eapi->>api:GET/address/addresses <br>Input: idTransaction,dl,Id,last4ssn,DOB<br>Street,City,State,ZIP and County
+    eapi->>api:GET/address/addresses <br>Input: Street,City,State and ZipCode
     api-->>api:Scheduler - put the token in object store every 30 minutes.<br>Dataweave - format records for USPS.
     api-->>usps:Address validation.
     usps-->>api:Retrieve response.
@@ -43,6 +42,4 @@ sequenceDiagram
     alt Error Scenario 
         api-->eapi: Status 400 or 500, detail error message
     end
-  
-
   ```
