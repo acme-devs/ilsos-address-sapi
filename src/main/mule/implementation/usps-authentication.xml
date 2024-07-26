@@ -15,8 +15,9 @@
 	<flow name="usps-authentication"  >
 		<scheduler doc:name="Scheduler" >
 			<scheduling-strategy>
-                <cron expression="${api.tokenCron}"/>
-            </scheduling-strategy>
+				<fixed-frequency frequency="30" timeUnit="MINUTES" />
+            
+</scheduling-strategy>
 		</scheduler>
 		
 		<ee:transform doc:name="USPS HTTP Headers"  >

@@ -15,13 +15,13 @@
 
     
 	<flow name="api-main">
-        <http:listener config-ref="api-httpListenerConfig" path="/api/*">
+        <http:listener config-ref="api-httpListenerConfig" path="/api/address/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]"> 
-                <http:body>#[payload default {}]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[payload default {}]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response> 
         </http:listener>
         <!--<logger doc:name="payload" level="INFO" message="#[payload]"/>-->
