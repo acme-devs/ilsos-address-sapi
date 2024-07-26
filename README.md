@@ -31,7 +31,7 @@ sequenceDiagram
     participant api as ilsos-address-sapi
     participant usps as USPS
 
-    eapi->>api:GET/address/addresses <br>Input: Street,City,State and ZipCode
+    eapi->>api:GET/addresses <br>Input: street,city,state and zipCode
     api-->>api:Scheduler - put the authorization token in object store every 30 minutes.<br>Dataweave - format records for USPS.
     api-->>usps:Address validation.
     usps-->>api:Retrieve response.
