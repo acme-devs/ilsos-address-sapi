@@ -32,7 +32,7 @@ sequenceDiagram
     participant usps as USPS
 
     eapi->>api:GET/address/addresses <br>Input: Street,City,State and ZipCode
-    api-->>api:Scheduler - put the token in object store every 30 minutes.<br>Dataweave - format records for USPS.
+    api-->>api:Scheduler - put the authorization token in object store every 30 minutes.<br>Dataweave - format records for USPS.
     api-->>usps:Address validation.
     usps-->>api:Retrieve response.
     api-->>api:Log response. If USPS access error, then send email to admin
