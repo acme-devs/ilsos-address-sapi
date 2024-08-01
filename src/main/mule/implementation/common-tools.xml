@@ -13,31 +13,7 @@
 	
 		<flow name="call-api">
 
-		<!-- <logger doc:name="call GET" level="INFO" category="app" message='#[output application/java -&#45;&#45; "GET: " ++ attributes.queryParams.city++attributes.queryParams.state
-		++attributes.queryParams.street++attributes.queryParams.zipCode]' /> -->
-
 		<set-variable doc:name="set apiInputPayload" variableName="apiInputPayload" value='#[payload]'  />
-
-		<!-- <http:request config-ref="HTTP_Request_configuration" 
-			method="GET" path="${api.addressUrl}" responseTimeout="#[1800000]">
-			<http:headers><![CDATA[#[output application/java
-				-&#45;&#45;
-				{
-					Authorization : "Bearer" ++ " " ++ payload
-				}]]]>
-			</http:headers>
-			<http:query-params ><![CDATA[#[output application/java
-				-&#45;&#45;
-				{
-					"state": vars.state,
-				    "ZIPCode": vars.ZipCode,
-				    "city": vars.city,
-				    "streetAddress": vars.streetAddress
-				}]]]></http:query-params>
-			<http:response-validator>
-				<http:success-status-code-validator values="#[vars.statusValidator]" />
-			</http:response-validator>
-		</http:request> -->
 
 		<http:request method="GET" doc:name="USPS Address Request" config-ref="HTTP_Request_configuration" path="${usps.addresspath}">
 			<http:headers><![CDATA[#[output application/java
@@ -57,10 +33,6 @@
 			</http:query-params>
 		</http:request>
 		
-		
-
-		
-		
 		<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[200]'  />
 		<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[payload]'/>
 
@@ -72,7 +44,7 @@
 				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'  />
 				<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[error.errorMessage.payload]'/>
 			
-</on-error-continue>
+			</on-error-continue>
 		</error-handler>
 	</flow> 
 	
