@@ -12,32 +12,42 @@
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	
 	<!-- Scheduler flow to get token every 30 minutes -->
+	<!-- <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3d0f1b16-f3f4-42d0-8fdf-616c241c2349" >
+		<http:listener-connection host="0.0.0.0" port="8088" />
+	</http:listener-config> -->
 	<flow name="usps-authentication"  >
 		<scheduler doc:name="Scheduler" >
 			<scheduling-strategy>
-				<fixed-frequency frequency="30" timeUnit="MINUTES" />
-            
-</scheduling-strategy>
+				<fixed-frequency frequency="5" timeUnit="MINUTES" />
+         	</scheduling-strategy>
 		</scheduler>
+		
+		
+		<set-variable value="#[correlationId]" doc:name="Set correlationId"  variableName="correlationId" />
 		
 		<ee:transform doc:name="USPS HTTP Headers"  >
 			<ee:message >
 				<ee:set-payload resource="dwl/requestPayload.dwl"></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		
-		<http:request method="POST" doc:name="USPS HTTP Token Request" path="${api.tokenUrl}" config-ref="HTTP_Request_configuration">
-            <http:body ><![CDATA[#[output application/json
+        
+        <http:request method="POST" doc:name="USPS HTTP Token Request" path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
+            <http:body><![CDATA[#[output application/json
 						---
 						payload]]]></http:body>
 			<http:headers><![CDATA[#[{
 							"Content-Type": "application/json"
 	}]]]></http:headers>
         </http:request>
-        
-        <set-payload value="#[payload.access_token]" doc:name="USPS Token Extract "/>
+		<set-payload value="#[payload.access_token]" doc:name="USPS Token Extract " />
         
 	    <!--<logger doc:name="payload" level="INFO" message="#[payload]"/>-->
 		<os:store doc:name="USPS Token Store " key="usps_token" objectStore="Object_store"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d88b34b9-5af3-40cb-9b5f-1b52531f1b9a" >
+				<logger level="INFO" doc:name="Logger " doc:id="ee373d6f-00b5-4e53-9ab6-04c04beb6b16" message="There was an error while calling USPS token service" category="app" />
+				<logger level="INFO" doc:name="Log correlationId" doc:id="92613602-2d2a-4d7a-9a4f-44eec8e6371c" message="#[vars.correlationId]" category="app"/>
+			</on-error-continue>
+		</error-handler>
 	</flow>
 	</mule>	

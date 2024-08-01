@@ -39,7 +39,7 @@
 			</http:response-validator>
 		</http:request> -->
 
-		<http:request method="GET" doc:name="USPS Address Request" config-ref="HTTP_Request_configuration" path="${api.addressUrl}">
+		<http:request method="GET" doc:name="USPS Address Request" config-ref="HTTP_Request_configuration" path="${usps.addresspath}">
 			<http:headers><![CDATA[#[output application/java
 				---
 				{

@@ -37,21 +37,20 @@
 		<http:listener-connection
 			connectionIdleTimeout="1800000"
 			host="0.0.0.0"
-			port="${httpsport}"
-			protocol="${httpprotocol}"
-			tlsContext="TLS_Context">
+			port="${httpsport}">
 		</http:listener-connection>
 	</http:listener-config>
     
     <http:request-config name="HTTP_Request_configuration" 
      		doc:name="HTTP Request configuration" >
 		<http:request-connection 
-			host="${api.uspsDomain}" 
-			port="${api.uspsPort}" 
+			host="${usps.host}" 
+			port="${usps.port}" 
 			protocol="${httpprotocol}"/>
 	</http:request-config>
 	
-	<os:object-store name="Object_store" doc:name="Object store"/>
+	<os:object-store name="Object_store" doc:name="Object store" entryTtl="1" entryTtlUnit="MINUTES" expirationInterval="2" config-ref="ObjectStore_Config"/>
+	<os:config name="ObjectStore_Config" doc:name="ObjectStore Config"  />
 	
 	
 </mule>

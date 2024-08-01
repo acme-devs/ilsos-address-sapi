@@ -8,24 +8,14 @@ api:
   version: "${restconnector.api.spec.version}"
   spec: "resource::${api.group}:${api.artifact}:${api.version}:raml:zip:api.raml"
   id: "0"
-
-
-  grant_type : "client_credentials"
-  client_id: "AraUal8FJpUpfGbbcDgNf6UeHATsYBaE"
-  client_secret: "Hd8c1Dzyexemtqi4"
-  code: "EyQPFYVI"
-  uspsDomain: "api.usps.com"
-  uspsPort: "443"
-  tokenUrl: "/oauth2/v3/token"
-  addressUrl: "/addresses/v3/address"
-  tokenCron: "0 */30 * * * ?"
-
+  
 usps:
   grant_type : "client_credentials"
   clientid: "myclientid"
   clientsecret: "mysecret"
+  code: "mycode"
   host: "api.usps.com"
   port: "443"
   tokenpath: "/oauth2/v3/token"
   addresspath: "/addresses/v3/address"
-  tokencron: "0 */30 * * * ?"
+  tokencron: "0 */1 * * * ?"

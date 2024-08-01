@@ -43,18 +43,24 @@
             </ee:variables>
         </ee:transform>
 		<os:retrieve doc:name="USPS Token Retrieve from Object Store" key="usps_token" objectStore="Object_store">
-			<os:default-value ><![CDATA[""]]></os:default-value>
 		</os:retrieve>
+		<!-- Set retrieved value to a variable -->
+		<set-variable variableName="usps_token" value="#[payload]" doc:name="Set Retrieved Token"/>
 		
-		<flow-ref doc:name="Flow Reference" doc:id="2fa700cd-e881-46d7-8254-1c921217a982" name="call-api"/>
+		 <!-- Check if the token is present -->
+		<flow-ref doc:name="Flow Reference" name="call-api" />
+
+        <!-- Process the response from call-api or handle missing token -->
 		<ee:transform doc:name="USPS Get Address Response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 if ( vars.httpStatus != 200 ) {
+	correlationId:vars.correlationId,
 	code: vars.httpStatus,
 	message: vars.httpMessage.error.errors[0].detail
+	
 }else
 										{
 	"street": payload.address.streetAddress,
@@ -68,6 +74,25 @@ if ( vars.httpStatus != 200 ) {
                 </ee:set-payload>
             </ee:message>
         </ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3d34b120-68e8-40f3-bed5-b0fddb88791e" >
+				<set-variable value="500" doc:name="Set Variable" doc:id="36389d76-d501-4484-9c16-445a2a581361" variableName="httpStatus" />
+				<set-variable value="The backend service couldn't complete the request, please check the system logs for more information." doc:name="Set Variable" doc:id="9cdd2789-7edc-4083-a7b9-e29d4435c8a5" variableName="httpMessage" />
+				<ee:transform doc:name="USPS Get Address No Token Response" doc:id="bbc848f8-b6f9-48d6-97f7-73ca6868a985" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	correlationId:vars.correlationId,
+	code: vars.httpStatus,
+	message: vars.httpMessage
+	
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
 	</flow>
 	
 </mule>

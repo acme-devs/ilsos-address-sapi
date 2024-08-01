@@ -44,6 +44,7 @@
     </flow>
 
     <flow name="get:\addresses:api-config">
+		<set-variable value="#[correlationId]" doc:name="Set correlationId" doc:id="e2d2c847-6ec5-4b5b-8d98-6d124fb6d377" variableName="correlationId"/>
 		<flow-ref doc:name="usps-getaddress" name="usps-getaddress"/>
 	</flow>
 	 
