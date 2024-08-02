@@ -13,73 +13,78 @@
 	
 	<flow name="usps-getaddress" >
 		<ee:transform doc:name="USPS Query Params for Address Service">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-                    output application/java
-                    ---
-                    payload
-                ]]></ee:set-payload>
-            </ee:message>
-            <ee:variables>
-                <ee:set-variable variableName="city"><![CDATA[%dw 2.0
-                    output application/java
-                    ---
-                    attributes.queryParams.city
-                ]]></ee:set-variable>
-                <ee:set-variable variableName="state"><![CDATA[%dw 2.0
-                    output application/java
-                    ---
-                    attributes.queryParams.state
-                ]]></ee:set-variable>
-                <ee:set-variable variableName="streetAddress"><![CDATA[%dw 2.0
-                    output application/java
-                    ---
-                    attributes.queryParams.street               ]]></ee:set-variable>
-                <ee:set-variable variableName="ZipCode"><![CDATA[%dw 2.0
-                    output application/java
-                    ---
-                    attributes.queryParams.zipCode
-                ]]></ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-		<os:retrieve doc:name="USPS Token Retrieve from Object Store" key="usps_token" objectStore="Object_store">
+			<ee:message>
+			<ee:set-payload><![CDATA[%dw 2.0
+			    output application/java
+			    ---
+			    payload
+			]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			<ee:set-variable variableName="city"><![CDATA[%dw 2.0
+			    output application/java
+			    ---
+			    attributes.queryParams.city
+			]]></ee:set-variable>
+			<ee:set-variable variableName="state"><![CDATA[%dw 2.0
+			    output application/java
+			    ---
+			    attributes.queryParams.state
+			]]></ee:set-variable>
+			<ee:set-variable variableName="streetAddress"><![CDATA[%dw 2.0
+			    output application/java
+			    ---
+			    attributes.queryParams.street               ]]></ee:set-variable>
+			<ee:set-variable variableName="ZipCode"><![CDATA[%dw 2.0
+			    output application/java
+			    ---
+			    attributes.queryParams.zipCode
+			]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		
+		<os:retrieve doc:name="USPS Token Retrieve from Object Store" 
+			key="usps_token" objectStore="Object_store">
 		</os:retrieve>
-		<!-- Set retrieved value to a variable -->
+			
+		<!-- Set the retrieved value to a variable -->
 		<set-variable variableName="usps_token" value="#[payload]" doc:name="Set Retrieved Token"/>
 		
 		 <!-- Check if the token is present -->
 		<set-variable value="eyJraWQiOiJIdWpzX2F6UnFJUzBpSE5YNEZIRk96eUwwdjE4RXJMdjNyZDBoalpNUnJFIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI0MTM0NDA1NjEiLCJjcmlkIjoiNDc4NjIzNzEiLCJzdWJfaWQiOiI0MTM0NDA1NjEiLCJwYXltZW50X2FjY291bnRzIjoie30iLCJpc3MiOiJodHRwczpcL1wva2V5Yy51c3BzLmNvbVwvcmVhbG1zXC9VU1BTIiwiY29udHJhY3RzIjoie1wicGF5bWVudEFjY291bnRzXCI6e30sXCJwZXJtaXRzXCI6e1wicGVybWl0c1wiOlwiXCJ9fSIsImZhc3QiOiIiLCJhenAiOiJBcmFVYWw4RkpwVXBmR2JiY0RnTmY2VWVIQVRzWUJhRSIsIm1haWxfb3duZXJzIjoiW3tcImNyaWRcIjpcIjQ3ODYyMzcxXCIsXCJtaWRzXCI6XCJcIn1dIiwic2NvcGUiOiJhZGRyZXNzZXMgaW50ZXJuYXRpb25hbC1wcmljZXMgc2VydmljZS1zdGFuZGFyZHMgcHJpY2VzIHNoaXBtZW50cyIsImNvbXBhbnlfbmFtZSI6IlBlcnNvbmFsIiwib3JnYW5pemF0aW9uX2lkIjoiMzA5NCIsImV4cCI6MTcyMjYzOTUyMCwiaWF0IjoxNzIyNjEwNzIwLCJqdGkiOiI1OGYzMTlmMS0xY2M0LTQxMDAtYTRkMi1mZTY3MjE0ZjU5MTUifQ.YuP2LsEt1vwbyvZ-Wc8uUXkbF9VlblQwMyApxZl2AxX0JdPSPWVuPp3-TucjXtzikgkT--dFu3AKVNkYdNS6OfPCO--rhNQwfVfu-odR6q77KMcDSMy5QiGC57OYSUZcMgn95dcIEAAG3FN1No0Ug5FNH89ZZghoIQafnMqQF9GYQeJSgHPoOPWhR6zqsUq4EahVXdgwdu9mjFamszP5M9VwQuwH9Kj_chRUk0xUbGloxDq4CculA5ErA1hNesmI330UR9DpwQdrs1KcFOSUxn_6m7pUAj1LFDgF4T1yhdYW9keh1DDRBc3b8vHwJsHciNR1kGJZUDnzIywlk6XXHQ" doc:name="Set Hardcoded Token for demo" doc:id="ef334849-6f66-4dac-af17-524c0c54a693" variableName="usps_token" />
 		<flow-ref doc:name="Flow Reference" name="call-api" />
 
-        <!-- Process the response from call-api or handle missing token -->
+		<!-- Process the response from call-api or handle missing token -->
 		<ee:transform doc:name="USPS Get Address Response">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-if ( vars.httpStatus != 200 ) {
-	correlationId:vars.correlationId,
-	code: vars.httpStatus,
-	message: vars.httpMessage.error.errors[0].detail
-	
-}else
-										{
-	"street": payload.address.streetAddress,
-	"secondary": payload.address.secondary,
-	"city": payload.address.city,
-	"state": payload.address.state,
-	"zipcode": payload.address.ZIPCode,
-	"zipplus4": payload.address.ZIPPlus4
-}
-							]]>
-                </ee:set-payload>
-            </ee:message>
-        </ee:transform>
+			<ee:message>
+		                <ee:set-payload><![CDATA[%dw 2.0
+		output application/json
+		---
+		if ( vars.httpStatus != 200 ) {
+			correlationId:vars.correlationId,
+			code: vars.httpStatus,
+			message: vars.httpMessage.error.errors[0].detail
+			
+		}else
+												{
+			"street": payload.address.streetAddress,
+			"secondary": payload.address.secondary,
+			"city": payload.address.city,
+			"state": payload.address.state,
+			"zipcode": payload.address.ZIPCode,
+			"zipplus4": payload.address.ZIPPlus4
+		}
+									]]>
+		                </ee:set-payload>
+            		</ee:message>
+		</ee:transform>
+		
 		<error-handler >
-			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3d34b120-68e8-40f3-bed5-b0fddb88791e" >
-				<set-variable value="500" doc:name="Set Variable" doc:id="36389d76-d501-4484-9c16-445a2a581361" variableName="httpStatus" />
-				<set-variable value="The backend service couldn't complete the request, please check the system logs for more information." doc:name="Set Variable" doc:id="9cdd2789-7edc-4083-a7b9-e29d4435c8a5" variableName="httpMessage" />
-				<ee:transform doc:name="USPS Get Address No Token Response" doc:id="bbc848f8-b6f9-48d6-97f7-73ca6868a985" >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" >
+				<set-variable variableName="httpStatus" value="500" />
+				<set-variable variableName="httpMessage" 
+					value="The backend service couldn't complete the request, please check the system logs for more information." />
+				<ee:transform doc:name="USPS Get Address No Token Response" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -95,7 +100,4 @@ output application/json
 			</on-error-continue>
 		</error-handler>
 	</flow>
-	
 </mule>
-
-	
