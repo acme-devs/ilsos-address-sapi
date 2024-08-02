@@ -39,9 +39,11 @@
 		
 		<os:store doc:name="USPS Token Store" key="usps_token" objectStore="Object_store"/>
 		<error-handler >
-			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d88b34b9-5af3-40cb-9b5f-1b52531f1b9a" >
-				<logger level="INFO" doc:name="Logger " doc:id="ee373d6f-00b5-4e53-9ab6-04c04beb6b16" message="There was an error while calling USPS token service" category="app" />
-				<logger level="INFO" doc:name="Log correlationId" doc:id="92613602-2d2a-4d7a-9a4f-44eec8e6371c" message="#[vars.correlationId]" category="app"/>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" >
+				<logger level="INFO" doc:name="Logger"  
+					message="There was an error while calling USPS token service" category="app" />
+				<logger level="INFO" doc:name="Log correlationId" 
+					message="#[vars.correlationId]" category="app"/>
 			</on-error-continue>
 		</error-handler>
 	</flow>
