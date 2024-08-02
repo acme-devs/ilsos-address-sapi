@@ -15,7 +15,7 @@
 	<flow name="usps-authentication"  >
 		<scheduler doc:name="Scheduler" >
 			<scheduling-strategy>
-				<fixed-frequency frequency="30" timeUnit="MINUTES"/>
+				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
          		</scheduling-strategy>
 		</scheduler>
 		
@@ -48,6 +48,9 @@
 					message="There was an error while calling USPS token service"  />
 				<logger level="INFO" doc:name="Log correlationId" category="app"
 					message="#[vars.correlationId]" />
+				<logger level="INFO" category="app" message="There was an error from server" />
+				<logger level="INFO" category="app" message="#[error.errorMessage.payload]" />
+				<logger level="INFO" category="app" message="#[error.errorMessage]" />
 			</on-error-continue>
 		</error-handler>
 	</flow>
