@@ -44,7 +44,7 @@
 	</http:listener-config>
     
     	<http:request-config name="HTTP_Request_configuration" 
-     		doc:name="HTTP Request configuration" enableCookies="false"s >
+     		doc:name="HTTP Request configuration" enableCookies="false">
 		<http:request-connection 
 			host="${usps.host}" 
 			port="${usps.port}" 
