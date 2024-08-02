@@ -13,7 +13,6 @@ usps:
   granttype : "client_credentials"
   clientid: "myclientid"
   clientsecret: "mysecret"
-  code: "mycode"
   host: "api.usps.com"
   port: "443"
   tokenpath: "/oauth2/v3/token"
