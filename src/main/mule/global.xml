@@ -51,17 +51,11 @@
 			protocol="${httpprotocol}"/>
 	</http:request-config>
 	
-<<<<<<< HEAD
+
 	<os:object-store name="Object_store" doc:name="Object store" entryTtl="35" entryTtlUnit="MINUTES" expirationInterval="35" config-ref="ObjectStore_Config"/>
-=======
-	<os:object-store name="Object_store" 
-		doc:name="Object store" 
-		entryTtl="1" 
-		entryTtlUnit="MINUTES"
-		expirationInterval="2" 
-		config-ref="ObjectStore_Config"/>
-		
->>>>>>> origin/main
+
+	
+
 	<os:config name="ObjectStore_Config" doc:name="ObjectStore Config"  />
 	
 	
