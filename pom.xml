@@ -10,7 +10,7 @@
 
 	<groupId>0fa744b1-1284-46c5-b23c-0eb98ea787e3</groupId>
 	<artifactId>ilsos-address-sapi-app</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>mule-application</packaging>
 
 	<name>ilsos-address-sapi</name>
@@ -25,7 +25,7 @@
 		<!-- RAML specification -->
 		<restconnector.api.spec.group>${project.groupId}</restconnector.api.spec.group>
 		<restconnector.api.spec.artifact>ilsos-address-sapi</restconnector.api.spec.artifact>
-		<restconnector.api.spec.version>1.0.15</restconnector.api.spec.version>
+		<restconnector.api.spec.version>1.0.16</restconnector.api.spec.version>
 		
 	</properties>
 
@@ -50,7 +50,6 @@
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-objectstore-connector</artifactId>
-			<version>1.2.2</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
