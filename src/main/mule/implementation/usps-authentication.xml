@@ -28,16 +28,19 @@
 		</ee:transform>
 
 		<logger doc:name="payload" level="INFO" message="#[payload]"/>
-		
+		<logger doc:name="usps.tokenpath" level="INFO" message="${usps.tokenpath}"/>
+
 		<http:request method="POST" doc:name="USPS HTTP Token Request" path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
             		<http:body><![CDATA[#[output application/json --- payload]]]>
 			</http:body>
 			<http:headers><![CDATA[#[{"Content-Type": "application/json"}]]]>
 			</http:headers>
         	</http:request>
-		
+
+		<logger doc:name="getting response" level="INFO" message="#['Getting data from the token response']"/>
 		<set-payload value="#[payload.access_token]" doc:name="USPS Token Extract " />
-		
+
+		<logger doc:name="setting object store" level="INFO" message="#['Setting the object store with new value']"/>
 		<os:store doc:name="USPS Token Store" key="usps_token" objectStore="Object_store"/>
 		<error-handler >
 			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" >
