@@ -40,10 +40,10 @@
 		<os:store doc:name="USPS Token Store" key="usps_token" objectStore="Object_store"/>
 		<error-handler >
 			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" >
-				<logger level="INFO" doc:name="Logger"  
-					message="There was an error while calling USPS token service" category="app" />
-				<logger level="INFO" doc:name="Log correlationId" 
-					message="#[vars.correlationId]" category="app"/>
+				<logger level="INFO" doc:name="Logger"  category="app"
+					message="There was an error while calling USPS token service"  />
+				<logger level="INFO" doc:name="Log correlationId" category="app"
+					message="#[vars.correlationId]" />
 			</on-error-continue>
 		</error-handler>
 	</flow>
