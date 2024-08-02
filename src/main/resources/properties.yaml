@@ -10,7 +10,7 @@ api:
   id: "0"
   
 usps:
-  grant_type : "client_credentials"
+  granttype : "client_credentials"
   clientid: "myclientid"
   clientsecret: "mysecret"
   code: "mycode"
@@ -18,4 +18,5 @@ usps:
   port: "443"
   tokenpath: "/oauth2/v3/token"
   addresspath: "/addresses/v3/address"
-  tokencron: "0 */1 * * * ?"
+  tokencron: "30"
+  objectstoreexpiretime: "35"

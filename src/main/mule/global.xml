@@ -21,7 +21,7 @@
 
 	<configuration-properties file="properties.yaml" />
 
-	<apikit:config
+		<apikit:config
 		name="api-config"
 		api="${api.spec}"
 		outboundHeadersMapName="outboundHeaders"
@@ -37,7 +37,9 @@
 		<http:listener-connection
 			connectionIdleTimeout="1800000"
 			host="0.0.0.0"
-			port="${httpsport}">
+			port="${https.port}" 
+			protocol="HTTPS"
+			tlsContext="TLS_Context">
 		</http:listener-connection>
 	</http:listener-config>
     
@@ -49,7 +51,7 @@
 			protocol="${httpprotocol}"/>
 	</http:request-config>
 	
-	<os:object-store name="Object_store" doc:name="Object store" entryTtl="1" entryTtlUnit="MINUTES" expirationInterval="2" config-ref="ObjectStore_Config"/>
+	<os:object-store name="Object_store" doc:name="Object store" entryTtl="35" entryTtlUnit="MINUTES" expirationInterval="35" config-ref="ObjectStore_Config"/>
 	<os:config name="ObjectStore_Config" doc:name="ObjectStore Config"  />
 	
 	

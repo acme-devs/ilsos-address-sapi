@@ -21,7 +21,7 @@
 	
 	<munit:test name="TokenFoundCase"  description="tokenFoundCase">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="4f61e31d-42e8-4a5e-a992-2a99efddae74" processor="os:retrieve">
+			<munit-tools:mock-when doc:name="Mock when" processor="os:retrieve">
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="USPS Token Retrieve from Object Store" attributeName="doc:name" />
 				</munit-tools:with-attributes>
@@ -281,14 +281,15 @@
 			expression="#[output application/java --- payload.^raw as String]" is='#[MunitTools::containsString("token")]' />
 		</munit:validation>
 	</munit:test>
-	<munit:test name="usps-uthenticationErrorCase" doc:id="5f7f0f68-39f2-4cfa-af9a-bf7166360f7c" description="usps-uthenticationErrorCase" >
+	
+	<munit:test name="usps-uthenticationErrorCase"  description="usps-uthenticationErrorCase" >
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="Mock when" doc:id="e805e652-a316-4d59-9c67-14b4b64eb25e" processor="os:retrieve" >
+			<munit-tools:mock-when doc:name="Mock when"  processor="os:retrieve" >
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="USPS Token Retrieve from Object Store" attributeName="doc:name" />
 				</munit-tools:with-attributes>
 			</munit-tools:mock-when>
-			<munit-tools:mock-when doc:name="Mock when1" doc:id="5331430a-44f0-49c1-8566-be669b628eb1" processor="http:request" >
+			<munit-tools:mock-when doc:name="Mock when1" processor="http:request" >
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="USPS Address Request" attributeName="doc:name" />
 				</munit-tools:with-attributes>
@@ -299,14 +300,14 @@
 			</munit-tools:mock-when>
 		</munit:behavior>
 		<munit:execution >
-			<munit:set-event doc:name="Set Event" doc:id="358d5489-64bf-425a-ad34-a21bc6d97f5e" >
+			<munit:set-event doc:name="Set Event"  >
 				<munit:payload value='#[{ "queryParams": {"street": "831 christopher robin rd" , "city": "alpharetta", "state": "GA", "zipCode": "30005"}}]' />
 				<munit:attributes value='#[{ "queryParams": {"street": "831 christopher robin rd" , "city": "alpharetta", "state": "GA", "zipCode": "30005"}}]' />
 			</munit:set-event>
-			<flow-ref doc:name="Flow-ref to api-main" doc:id="d772f947-6ade-46b8-90b5-917f9542ae38" name="get:\addresses:api-config" />
+			<flow-ref doc:name="Flow-ref to api-main"  name="get:\addresses:api-config" />
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:assert-that doc:name="Assert that" doc:id="2af3ecb8-8fdf-4b9f-be91-8eacf824cca6" expression="#[output application/java --- payload.^raw as String]" is='#[MunitTools::containsString("correlationId")]' />
+			<munit-tools:assert-that doc:name="Assert that" expression="#[output application/java --- payload.^raw as String]" is='#[MunitTools::containsString("correlationId")]' />
 		</munit:validation>
 	</munit:test>
 

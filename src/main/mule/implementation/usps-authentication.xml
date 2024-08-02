@@ -18,7 +18,7 @@
 	<flow name="usps-authentication"  >
 		<scheduler doc:name="Scheduler" >
 			<scheduling-strategy>
-				<fixed-frequency frequency="5" timeUnit="MINUTES" />
+				<fixed-frequency frequency="30" timeUnit="MINUTES"/>
          	</scheduling-strategy>
 		</scheduler>
 		
