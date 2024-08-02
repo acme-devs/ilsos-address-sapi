@@ -26,7 +26,9 @@
 				<ee:set-payload resource="dwl/requestPayload.dwl"></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-        
+
+		<logger doc:name="payload" level="INFO" message="#[payload]"/>
+		
 		<http:request method="POST" doc:name="USPS HTTP Token Request" path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
             		<http:body><![CDATA[#[output application/json --- payload]]]>
 			</http:body>
@@ -35,7 +37,6 @@
         	</http:request>
 		
 		<set-payload value="#[payload.access_token]" doc:name="USPS Token Extract " />
-        	<!--<logger doc:name="payload" level="INFO" message="#[payload]"/>-->
 		
 		<os:store doc:name="USPS Token Store" key="usps_token" objectStore="Object_store"/>
 		<error-handler >
