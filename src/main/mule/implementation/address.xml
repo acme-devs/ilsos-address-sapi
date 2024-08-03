@@ -12,70 +12,59 @@
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	
 	<flow name="usps-getaddress" >
-		<ee:transform doc:name="USPS Query Params for Address Service">
-			<ee:message>
-			<ee:set-payload><![CDATA[%dw 2.0
-			    output application/java
-			    ---
-			    payload
-			]]></ee:set-payload>
-			</ee:message>
+		<ee:transform doc:name="api parameters" >
 			<ee:variables>
-			<ee:set-variable variableName="city"><![CDATA[%dw 2.0
-			    output application/java
-			    ---
-			    attributes.queryParams.city
-			]]></ee:set-variable>
-			<ee:set-variable variableName="state"><![CDATA[%dw 2.0
-			    output application/java
-			    ---
-			    attributes.queryParams.state
-			]]></ee:set-variable>
-			<ee:set-variable variableName="streetAddress"><![CDATA[%dw 2.0
-			    output application/java
-			    ---
-			    attributes.queryParams.street               ]]></ee:set-variable>
-			<ee:set-variable variableName="ZipCode"><![CDATA[%dw 2.0
-			    output application/java
-			    ---
-			    attributes.queryParams.zipCode
-			]]></ee:set-variable>
+				<ee:set-variable variableName="apiQueryParameters"><![CDATA[#[ %dw 2.0
+					output application/java ---
+					{
+						"state": attributes.queryParams.state,
+						"ZIPCode": attributes.queryParams.zipCode,
+						"city": attributes.queryParams.city,
+						"streetAddress": attributes.queryParams.street 
+					}]]]>
+				</ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		
-		<os:retrieve doc:name="USPS Token Retrieve from Object Store" 
-			key="usps_token" objectStore="Object_store">
-		</os:retrieve>
-			
-		<!-- Set the retrieved value to a variable -->
-		<set-variable variableName="usps_token" value="#[payload]" doc:name="Set Retrieved Token"/>
+		<os:retrieve doc:name="get USPS auth token" key="usps_token" objectStore="Object_store"/>
 		
-		 <!-- Check if the token is present -->
-		<flow-ref doc:name="Flow Reference" name="call-api" />
+		<!-- Call the USPS service to validate address -->
+		<set-variable variableName="apiMethod" value="GET"/>
+		<set-variable variableName="apiPath" value="${usps.addresspath}"/>
+		<ee:transform doc:name="api parameters" >
+			<ee:variables >
+				<ee:set-variable variableName="apiHeaders"><![CDATA[#[ %dw 2.0
+					output application/java ---
+					{
+						Authorization : "Bearer" ++ " " ++ payload
+					}]]]>
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref name="call-api" />
 
 		<!-- Process the response from call-api or handle missing token -->
 		<ee:transform doc:name="USPS Get Address Response">
 			<ee:message>
-		                <ee:set-payload><![CDATA[%dw 2.0
-		output application/json
-		---
-		if ( vars.httpStatus != 200 ) {
-			correlationId:vars.correlationId,
-			code: vars.httpStatus,
-			message: vars.httpMessage.error.errors[0].detail
-			
-		}else
-												{
-			"street": payload.address.streetAddress,
-			"secondary": payload.address.secondary,
-			"city": payload.address.city,
-			"state": payload.address.state,
-			"zipcode": payload.address.ZIPCode,
-			"zipplus4": payload.address.ZIPPlus4
-		}
-									]]>
-		                </ee:set-payload>
-            		</ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+					output application/json
+					---
+					if ( vars.httpStatus != 200 ) {
+						correlationId:vars.correlationId,
+						code: vars.httpStatus,
+						message: vars.httpMessage.error.errors[0].detail
+					}
+					else {
+						street: payload.address.streetAddress,
+						secondary: payload.address.secondary,
+						city: payload.address.city,
+						state: payload.address.state,
+						zipcode: payload.address.ZIPCode,
+						zipplus4: payload.address.ZIPPlus4
+					}
+				]]>
+				</ee:set-payload>
+			</ee:message>
 		</ee:transform>
 		
 		<error-handler >
@@ -86,14 +75,15 @@
 				<ee:transform doc:name="USPS Get Address No Token Response" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-{
-	correlationId:vars.correlationId,
-	code: vars.httpStatus,
-	message: vars.httpMessage
-	
-}]]></ee:set-payload>
+							output application/json
+							---
+							{
+								correlationId:vars.correlationId,
+								code: vars.httpStatus,
+								message: vars.httpMessage
+								
+							}]]>
+						</ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</on-error-continue>

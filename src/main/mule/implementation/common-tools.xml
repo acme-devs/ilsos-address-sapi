@@ -11,26 +11,12 @@
 		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	
-		<flow name="call-api">
+	<flow name="call-api">
 
-		<set-variable doc:name="set apiInputPayload" variableName="apiInputPayload" value='#[payload]'  />
-
-		<http:request method="GET" doc:name="USPS Address Request" config-ref="HTTP_Request_configuration" path="${usps.addresspath}">
-			<http:headers><![CDATA[#[output application/java
-				---
-				{
-					Authorization : "Bearer" ++ " " ++ payload
-				}]]]>
-			</http:headers>
-			<http:query-params><![CDATA[#[output application/java
-				---
-				{
-					"state": vars.state,
-				    "ZIPCode": vars.ZipCode,
-				    "city": vars.city,
-				    "streetAddress": vars.streetAddress
-				}]]]>
-			</http:query-params>
+		<http:request doc:name="call API service" config-ref="HTTP_Request_configuration" 
+			path="${usps.addresspath}" method="#[vars.apiMethod]">
+			<http:headers><![CDATA[#[vars.apiHeaders]]]></http:headers>
+			<http:query-params><![CDATA[#[vars.apiQueryParameters]]]></http:query-params>
 		</http:request>
 		
 		<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[200]'  />
@@ -38,12 +24,10 @@
 
 		<error-handler>
 			<on-error-continue enableNotifications="false" logException="false">
-				<logger level="INFO" category="app" message="There was an error while calling the service through the GET method" />
+				<logger level="INFO" category="app" message="There was an error while calling the API service" />
 				<logger level="INFO" category="app" message="#[error.errorMessage.payload]" />
-				<logger level="INFO" category="app" message="#[error.errorMessage]" />
 				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'  />
 				<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[error.errorMessage.payload]'/>
-			
 			</on-error-continue>
 		</error-handler>
 	</flow> 

@@ -18,26 +18,32 @@
 				<fixed-frequency frequency="${scheduler.frequency}" timeUnit="MINUTES"/>
          	</scheduling-strategy>
 		</scheduler>
-		
-		<set-variable value="#[correlationId]" doc:name="Set correlationId"  variableName="correlationId" />
-		
-		<ee:transform doc:name="USPS HTTP Headers"  >
-			<ee:message >
-				<ee:set-payload resource="dwl/requestPayload.dwl"></ee:set-payload>
-			</ee:message>
+
+		<ee:transform doc:name="api parameters" >
+			<ee:variables >
+				<ee:set-variable variableName="apiBody"><![CDATA[#[ %dw 2.0 ---
+					{
+						grant_type: p('usps.granttype'),
+						client_id: p('usps.clientid'),
+						client_secret: p('usps.clientsecret')
+					}]]]>
+				</ee:set-variable>
+				<ee:set-variable variableName="apiHeaders"><![CDATA[#[ %dw 2.0 ---
+					{
+						"Content-Type" : "application/json"
+					}]]]>
+				</ee:set-variable>
+			</ee:variables>
 		</ee:transform>
 
-		<logger doc:name="payload" level="INFO" message="Getting the authentication token"/>
+		<logger doc:name="payload" level="INFO" message="Get the authentication token"/>
 	
 		<http:request method="POST" doc:name="USPS HTTP Token Request"
 			path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
-			<http:body><![CDATA[#[output application/json --- payload]]]>
-			</http:body>
-			<http:headers><![CDATA[#[{"Content-Type": "application/json"}]]]>
-			</http:headers>
+			<http:body><![CDATA[#[output application/json --- vars.apiBody]]]></http:body>
+			<http:headers><![CDATA[#[vars.apiHeaders]]]></http:headers>
 		</http:request>
 
-		<logger doc:name="getting response" level="INFO" message="#['Getting data from the token response']"/>
 		<set-payload value="#[payload.access_token]" doc:name="USPS Token Extract " />
 
 		<logger doc:name="setting object store" level="INFO" message="#['Setting the object store with new value']"/>
@@ -46,11 +52,8 @@
 			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" >
 				<logger level="INFO" doc:name="Logger"  category="app"
 					message="There was an error while calling USPS token service"  />
-				<logger level="INFO" doc:name="Log correlationId" category="app"
-					message="#[vars.correlationId]" />
 				<logger level="INFO" category="app" message="There was an error from server" />
 				<logger level="INFO" category="app" message="#[error.errorMessage.payload]" />
-				<logger level="INFO" category="app" message="#[error.errorMessage]" />
 			</on-error-continue>
 		</error-handler>
 	</flow>
