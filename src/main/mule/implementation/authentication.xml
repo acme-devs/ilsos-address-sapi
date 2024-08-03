@@ -15,8 +15,8 @@
 	<flow name="usps-authentication"  >
 		<scheduler doc:name="Scheduler" >
 			<scheduling-strategy>
-				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
-         		</scheduling-strategy>
+				<fixed-frequency frequency="${scheduler.frequency}" timeUnit="MINUTES"/>
+         	</scheduling-strategy>
 		</scheduler>
 		
 		<set-variable value="#[correlationId]" doc:name="Set correlationId"  variableName="correlationId" />
@@ -30,12 +30,13 @@
 		<logger doc:name="payload" level="INFO" message="#[payload]"/>
 		<logger doc:name="usps.tokenpath" level="INFO" message="${usps.tokenpath}"/>
 
-		<http:request method="POST" doc:name="USPS HTTP Token Request" path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
-            		<http:body><![CDATA[#[output application/json --- payload]]]>
+		<http:request method="POST" doc:name="USPS HTTP Token Request"
+			path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
+			<http:body><![CDATA[#[output application/json --- payload]]]>
 			</http:body>
 			<http:headers><![CDATA[#[{"Content-Type": "application/json"}]]]>
 			</http:headers>
-        	</http:request>
+		</http:request>
 
 		<logger doc:name="getting response" level="INFO" message="#['Getting data from the token response']"/>
 		<set-payload value="#[payload.access_token]" doc:name="USPS Token Extract " />

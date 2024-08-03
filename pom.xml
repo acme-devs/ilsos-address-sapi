@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>0fa744b1-1284-46c5-b23c-0eb98ea787e3</groupId>
 		<artifactId>ilsos-pom</artifactId>
-		<version>1.0.23</version>
+		<version>1.0.24</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>0fa744b1-1284-46c5-b23c-0eb98ea787e3</groupId>
 	<artifactId>ilsos-address-sapi-app</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>mule-application</packaging>
 
 	<name>ilsos-address-sapi</name>

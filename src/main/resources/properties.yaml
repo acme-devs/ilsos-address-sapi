@@ -8,14 +8,18 @@ api:
   version: "${restconnector.api.spec.version}"
   spec: "resource::${api.group}:${api.artifact}:${api.version}:raml:zip:api.raml"
   id: "0"
-  
+
+scheduler:
+  frequency: "30"
+
+objectstore:
+  expiration: "35"
+
 usps:
-  granttype : "client_credentials"
+  granttype: "client_credentials"
   clientid: "myclientid"
   clientsecret: "mysecret"
   host: "api.usps.com"
   port: "443"
   tokenpath: "/oauth2/v3/token"
   addresspath: "/addresses/v3/address"
-  tokencron: "30"
-  objectstoreexpiretime: "35"
