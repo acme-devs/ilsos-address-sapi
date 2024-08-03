@@ -27,9 +27,8 @@
 			</ee:message>
 		</ee:transform>
 
-		<logger doc:name="payload" level="INFO" message="#[payload]"/>
-		<logger doc:name="usps.tokenpath" level="INFO" message="${usps.tokenpath}"/>
-
+		<logger doc:name="payload" level="INFO" message="Getting the authentication token"/>
+	
 		<http:request method="POST" doc:name="USPS HTTP Token Request"
 			path="${usps.tokenpath}" config-ref="HTTP_Request_configuration">
 			<http:body><![CDATA[#[output application/json --- payload]]]>
