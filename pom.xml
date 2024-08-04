@@ -10,7 +10,7 @@
 
 	<groupId>0fa744b1-1284-46c5-b23c-0eb98ea787e3</groupId>
 	<artifactId>ilsos-address-sapi-app</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<packaging>mule-application</packaging>
 
 	<name>ilsos-address-sapi</name>
