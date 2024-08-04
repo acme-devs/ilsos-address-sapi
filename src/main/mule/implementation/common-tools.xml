@@ -13,14 +13,30 @@
 	
 	<flow name="call-api">
 
-		<http:request doc:name="call API service" config-ref="HTTP_Request_configuration" 
-			path="${usps.addresspath}" method="#[vars.apiMethod]">
-			<http:headers><![CDATA[#[vars.apiHeaders]]]></http:headers>
-			<http:query-params><![CDATA[#[vars.apiQueryParameters]]]></http:query-params>
+		<http:request config-ref="HTTP_Request_configuration" 
+			path="#[vars.apiPath]" method="#[vars.apiMethod]" sendCorrelationId="ALWAYS" sendBodyMode="AUTO">
+			<http:body><![CDATA[#[output application/json --- vars.apiBody]]]></http:body>
+			<http:headers><![CDATA[#[vars.apiHeaders]]]></http:headers>  
+			<http:query-params><![CDATA[#[if (vars.apiQueryParameters != null ) vars.apiQueryParameters else {} ]]]></http:query-params>
+			<http:response-validator>
+				<http:success-status-code-validator values="#[vars.apiCodeSuccess]" />
+			</http:response-validator>
 		</http:request>
-		
+
 		<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[200]'  />
 		<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[payload]'/>
+
+		<!-- Remove variables -->
+		<choice doc:name="remove variables" >
+            <when expression='#[ vars.apiQueryParameters != null ]'>
+				<remove-variable doc:name="remove apiQueryParameters" variableName="apiQueryParameters"/>
+			</when>
+            <when expression='#[ vars.apiBody != null ]'>
+				<remove-variable doc:name="remove apiBody" variableName="apiBody"/>
+			</when>
+		</choice>
+		<remove-variable doc:name="remove apiHeaders" variableName="apiHeaders"/>
+		<remove-variable doc:name="remove apiMethod" variableName="apiMethod"/>
 
 		<error-handler>
 			<on-error-continue enableNotifications="false" logException="false">

@@ -12,6 +12,8 @@
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	
 	<flow name="usps-getaddress" >
+
+		<!-- Build the input parameters for the USPS service -->
 		<ee:transform doc:name="api parameters" >
 			<ee:variables>
 				<ee:set-variable variableName="apiQueryParameters"><![CDATA[#[ %dw 2.0
@@ -25,29 +27,21 @@
 				</ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		
-		<os:retrieve doc:name="get USPS auth token" key="usps_token" objectStore="Object_store"/>
-		
-		<!-- Call the USPS service to validate address -->
 		<set-variable variableName="apiMethod" value="GET"/>
 		<set-variable variableName="apiPath" value="${usps.addresspath}"/>
-		<ee:transform doc:name="api parameters" >
-			<ee:variables >
-				<ee:set-variable variableName="apiHeaders"><![CDATA[#[ %dw 2.0
-					output application/java ---
-					{
-						Authorization : "Bearer" ++ " " ++ payload
-					}]]]>
-				</ee:set-variable>
-			</ee:variables>
-		</ee:transform>
+		<set-variable variableName="apiCodeSuccess" value="200"/>
+
+		<!-- Get the authorization token and create the http header-->
+		<os:retrieve doc:name="get USPS auth token" key="usps_token" objectStore="Object_store"/>
+		<set-variable variableName="apiHeaders" value='#[{Authorization : "Bearer " ++ payload}]'/>
+
 		<flow-ref name="call-api" />
 
 		<!-- Process the response from call-api or handle missing token -->
 		<ee:transform doc:name="USPS Get Address Response">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
-					output application/json
+					output application/json skipNullOn="everywhere"
 					---
 					if ( vars.httpStatus != 200 ) {
 						correlationId:vars.correlationId,

@@ -85,7 +85,7 @@
 				<munit:attributes value='#[{ "queryParams": {"street": "831 christopher robin rd" , "city": "alpharetta", "state": "GA", "zipCode": "30005"}}]' />
 			
 		</munit:set-event>
-			<flow-ref doc:name="Flow-ref to usps-authentication" name="usps-authentication"/>
+			<flow-ref doc:name="Flow-ref to authentication" name="authentication-scheduler"/>
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert-that doc:name="Assert that" 
@@ -274,7 +274,7 @@
 				<munit:payload value='#[{ "queryParams": {"street": "831 christopher robin rd" , "city": "alpharetta", "state": "GAAA", "zipCode": "30005"}}]' />
 				<munit:attributes value='#[{ "queryParams": {"street": "831 christopher robin rd" , "city": "alpharetta", "state": "GA", "zipCode": "30005"}}]' />
 			</munit:set-event>
-			<flow-ref doc:name="Flow-ref to usps-authentication" name="usps-authentication" />
+			<flow-ref doc:name="Flow-ref to usps-authentication" name="authentication-scheduler" />
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert-that doc:name="Assert that" 

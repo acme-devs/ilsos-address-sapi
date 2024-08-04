@@ -15,13 +15,12 @@
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 		http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
 
-	
 	<import file="global-error.xml" />
 	<import file="global-configuration.xml" />
 
 	<configuration-properties file="properties.yaml" />
 
-		<apikit:config
+	<apikit:config
 		name="api-config"
 		api="${api.spec}"
 		outboundHeadersMapName="outboundHeaders"
@@ -43,17 +42,14 @@
 		</http:listener-connection>
 	</http:listener-config>
     
-	<http:request-config name="HTTP_Request_configuration" 
-     		doc:name="HTTP Request configuration" enableCookies="false">
+	<http:request-config name="HTTP_Request_configuration" enableCookies="false">
 		<http:request-connection 
 			host="${usps.host}" 
 			port="${usps.port}" 
 			protocol="${httpprotocol}"/>
 	</http:request-config>
 
-
-	<os:config name="ObjectStore_Config" 
-		doc:name="ObjectStore Config"  />
+	<os:config name="ObjectStore_Config" />
 
 	<os:object-store name="Object_store" 
 		doc:name="Object store" 
