@@ -53,8 +53,15 @@
                             artifact: p("commons.artifact") default "",
                             version:  p("commons.version") default ""
                         },
-                        apiId:        p("api.id") default "",
-                        correlationId:correlationId
+                        internal: {
+                            appHome:    p("app.home") default "",
+                            appName:    p("app.name") default "",
+                            domainName: p("domain.name") default "",
+                            apiName:    p("api.name") default "",
+                            muleHome:   p("mule.home") default ""
+                        },
+                        apiId:          p("api.id") default "",
+                        correlationId:  correlationId
                     } 
 				]]>
 				</ee:set-payload>
