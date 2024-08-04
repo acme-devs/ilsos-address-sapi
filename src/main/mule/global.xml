@@ -56,6 +56,7 @@
 		entryTtl="${objectstore.expiration}" 
 		entryTtlUnit="MINUTES" 
 		expirationInterval="${objectstore.expiration}" 
-		config-ref="ObjectStore_Config"/>	
+		config-ref="ObjectStore_Config" 
+		persistent="false"/>	
 	
 </mule>

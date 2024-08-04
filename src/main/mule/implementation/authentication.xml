@@ -49,10 +49,10 @@
 		<set-variable variableName="apiHeaders" value='#[ { "Content-Type" : "application/json" } ]'/>
 		<flow-ref name="call-api" />
 
-		<choice doc:name="Authorization token successful?" >
+		<choice doc:name="authorization token successful?" >
             <when expression='#[ vars.httpStatus == 200 ]'>
-				<set-payload value="#[payload.access_token]" doc:name="USPS Token Extract" />
-				<os:store doc:name="USPS Token Store" key="usps_token" objectStore="Object_store"/>
+				<set-payload doc:name="get token" value="#[payload.access_token]" />
+				<os:store doc:name="save token" key="usps_token" objectStore="Object_store"/>
 				<set-payload value="{ 'message' : 'Authorization token retrieved' }" mimeType="application/json" encoding="UTF-8"/>
 			</when>
 		</choice>

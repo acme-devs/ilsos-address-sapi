@@ -46,7 +46,7 @@
 					if ( vars.httpStatus != 200 ) {
 						correlationId:vars.correlationId,
 						code: vars.httpStatus,
-						message: vars.httpMessage.error.errors[0].detail
+						message: vars.apiErrorMessage.error.errors[0].detail
 					}
 					else {
 						street: payload.address.streetAddress,
@@ -61,26 +61,5 @@
 			</ee:message>
 		</ee:transform>
 		
-		<error-handler >
-			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" >
-				<set-variable variableName="httpStatus" value="500" />
-				<set-variable variableName="httpMessage" 
-					value="The backend service couldn't complete the request, please check the system logs for more information." />
-				<ee:transform doc:name="USPS Get Address No Token Response" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
-							output application/json
-							---
-							{
-								correlationId:vars.correlationId,
-								code: vars.httpStatus,
-								message: vars.httpMessage
-								
-							}]]>
-						</ee:set-payload>
-					</ee:message>
-				</ee:transform>
-			</on-error-continue>
-		</error-handler>
 	</flow>
 </mule>

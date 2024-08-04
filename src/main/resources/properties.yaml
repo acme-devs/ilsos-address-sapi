@@ -1,6 +1,13 @@
 # Default environment
 env: local
 
+# Service details
+service:
+  group: "${project.groupId}"
+  artifact: "${project.artifactId}"
+  version: "${project.version}"
+  name: "${project.name}"
+
 # The RAML API and autodiscovery
 api:  
   group: "${restconnector.api.spec.group}"

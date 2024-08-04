@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/http 
+		http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/core 
+		http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/ee/core 
+		http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<flow name="endpoint-health">
+        <http:listener config-ref="api-httpListenerConfig" path="/health">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[(vars.outboundHeaders default {}) ++ ({"correlationId" : correlationId})]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]"> 
+                <http:body>#[payload default {}]</http:body>
+                <http:headers>#[(vars.outboundHeaders default {}) ++ ({"correlationId" : correlationId})]</http:headers>
+            </http:error-response> 
+        </http:listener>
+
+		<ee:transform doc:name="get service information" >
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+					output application/json skipNullOn="everywhere"
+					---
+                    {
+                        status: 	  "OK",
+                        env:		  p("env") default "",
+                        http: {
+                            protocol: p("httpprotocol") default "",
+                            port:     p("https.port") default ""
+                        },
+                        service: {
+                            group: 	  p("service.group") default "",
+                            artifact: p("service.artifact") default "",
+                            version:  p("service.version") default "",
+                            name:     p("service.name") default ""
+                        },
+                        specification: {
+                            group: 	  p("api.group") default "",
+                            artifact: p("api.artifact") default "",
+                            version:  p("api.version") default "",
+                            spec:     p("api.spec") default ""
+                        },
+                        commons: {
+                            group:    p("commons.group") default "",
+                            artifact: p("commons.artifact") default "",
+                            version:  p("commons.version") default ""
+                        },
+                        apiId:        p("api.id") default "",
+                        correlationId:correlationId
+                    } 
+				]]>
+				</ee:set-payload>
+			</ee:message>
+		</ee:transform>
+
+		<set-variable doc:name="httpStatus" variableName="httpStatus" value="200"/>
+	</flow>
+</mule>

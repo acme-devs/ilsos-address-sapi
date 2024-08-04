@@ -24,7 +24,6 @@
 		</http:request>
 
 		<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[200]'  />
-		<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[payload]'/>
 
 		<!-- Remove variables -->
 		<choice doc:name="remove variables" >
@@ -42,8 +41,8 @@
 			<on-error-continue enableNotifications="false" logException="false">
 				<logger level="INFO" category="app" message="There was an error while calling the API service" />
 				<logger level="INFO" category="app" message="#[error.errorMessage.payload]" />
-				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'  />
-				<set-variable doc:name="set httpMessage" variableName="httpMessage" value='#[error.errorMessage.payload]'/>
+				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'/>
+				<set-variable doc:name="set apiErrorMessage" variableName="apiErrorMessage" value='#[error.errorMessage.payload]'/>
 			</on-error-continue>
 		</error-handler>
 	</flow> 
