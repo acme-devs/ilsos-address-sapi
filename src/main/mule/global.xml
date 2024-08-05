@@ -17,6 +17,7 @@
 
 	<import file="global-error.xml" />
 	<import file="global-configuration.xml" />
+	<import file="healthcheck.xml" />
 
 	<configuration-properties file="properties.yaml" />
 

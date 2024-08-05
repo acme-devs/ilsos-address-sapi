@@ -24,7 +24,6 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response> 
         </http:listener>
-        <!--<logger doc:name="payload" level="INFO" message="#[payload]"/>-->
 		<apikit:router config-ref="api-config" />
 		<error-handler ref="global-error-handler"/>
     </flow>
@@ -44,8 +43,10 @@
     </flow>
 
     <flow name="get:\addresses:api-config">
-		<set-variable value="#[correlationId]" doc:name="Set correlationId"  variableName="correlationId"/>
-		<flow-ref doc:name="usps-getaddress" name="usps-getaddress"/>
+		<flow-ref doc:name="address" name="address"/>
 	</flow>
 	 
+    <flow name="get:\healthcheck:api-config">
+		<flow-ref doc:name="healthcheck" name="healthcheck"/>
+	</flow>
 </mule>

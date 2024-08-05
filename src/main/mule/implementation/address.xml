@@ -11,7 +11,7 @@
 		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	
-	<flow name="usps-getaddress" >
+	<flow name="address" >
 
 		<!-- Build the input parameters for the USPS service -->
 		<ee:transform doc:name="api parameters" >
