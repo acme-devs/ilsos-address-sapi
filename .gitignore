@@ -107,6 +107,7 @@ modules.xml
 # ------------------------------------ #
 # Mulesfot with Eclipse, VSC, Maven    #
 # ------------------------------------ #
+temp
 
 # ----------------------------------------------------------------- #
 # Eclipse-specific (https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore) #

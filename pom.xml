@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>0fa744b1-1284-46c5-b23c-0eb98ea787e3</groupId>
 			<artifactId>ilsos-commons</artifactId>
-			<version>1.0.12</version>
+			<version>1.0.13</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
