@@ -22,6 +22,9 @@ scheduler:
 objectstore:
   expiration: "35"
 
+resttool:
+  logexception: "false"
+  
 usps:
   granttype: "client_credentials"
   clientid: "myclientid"

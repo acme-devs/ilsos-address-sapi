@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+		http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<http:request-config name="testRequestConfiguration" enableCookies="false">
+        <http:request-connection host="0.0.0.0" port="${https.port}" protocol="${httpprotocol}">
+			<tls:context >
+				<tls:trust-store type="pkcs12" 
+					path="${jks.path}"
+					password="${jks.keypassword}" 
+					insecure="true"/>
+			</tls:context>
+		</http:request-connection>
+    </http:request-config>
+
+	<sub-flow name="test-api">
+		<logger level="INFO" message='#[ "Call service, method:" ++ (vars.apiMethod as String) ++ ", apiCodeSuccess: " ++ (vars.apiCodeSuccess as String) ++ ", path: " ++ (vars.apiPath as String) ]' />
+		<http:request config-ref="testRequestConfiguration" 
+			path="#[vars.apiPath]" method="#[vars.apiMethod]" sendCorrelationId="ALWAYS" sendBodyMode="AUTO">
+			<http:body><![CDATA[#[output application/json --- vars.apiBody]]]></http:body>
+			<http:headers><![CDATA[#[vars.apiHeaders]]]></http:headers>  
+			<http:query-params><![CDATA[#[if (vars.apiQueryParameters != null ) vars.apiQueryParameters else {} ]]]></http:query-params>
+			<http:response-validator>
+				<http:success-status-code-validator values="#[vars.apiCodeSuccess]" />
+			</http:response-validator>
+		</http:request>
+		<logger level="INFO" message='#[payload]' />
+	</sub-flow>
+	
+</mule>

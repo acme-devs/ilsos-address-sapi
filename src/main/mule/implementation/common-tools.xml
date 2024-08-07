@@ -38,7 +38,7 @@
 		<remove-variable doc:name="remove apiMethod" variableName="apiMethod"/>
 
 		<error-handler>
-			<on-error-continue enableNotifications="false" logException="false">
+			<on-error-continue enableNotifications="false" logException="${resttool.logexception}">
 				<logger level="INFO" category="app" message="There was an error while calling the API service" />
 				<logger level="INFO" category="app" message="#[error.errorMessage.payload]" />
 				<set-variable doc:name="set httpStatus" variableName="httpStatus" value='#[error.errorMessage.attributes.statusCode]'/>

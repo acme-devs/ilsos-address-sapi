@@ -54,6 +54,7 @@
 				<set-payload doc:name="get token" value="#[payload.access_token]" />
 				<os:store doc:name="save token" key="usps_token" objectStore="Object_store"/>
 				<set-payload value="{ 'message' : 'Authorization token retrieved' }" mimeType="application/json" encoding="UTF-8"/>
+				<logger doc:name="payload" level="INFO" message="Get the authentication token"/>
 			</when>
 		</choice>
 
