@@ -101,6 +101,10 @@
 			<set-variable variableName="apiCodeSuccess" value="200"/>
 			<set-variable variableName="apiHeaders" value='#[{ "Content-Type" : "text/html" }]'/>
 			<flow-ref name="test-api" />
+			<munit-tools:assert-that
+				is="#[MunitTools::notNullValue()]"
+				expression='#[payload contains "APIkit Console"]'
+				message="The APIKit is not correctly configured" />
 
 		</munit:execution>
 
